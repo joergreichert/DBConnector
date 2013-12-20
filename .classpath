@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="var" path="JRE_LIB" sourcepath="JRE_SRC"/>
+	<classpathentry kind="lib" path="res/jdom.jar"/>
+	<classpathentry kind="lib" path="res/MySQL Connector.jar"/>
+	<classpathentry kind="lib" path="res/OracleJDBC.jar"/>
+	<classpathentry kind="lib" path="res/PostgreSQLJDBC3.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

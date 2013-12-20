@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="DirReader" basedir="." default="jar">
+	<property name="src.dir"  value="src" />
+	<property name="bin.dir"  value="bin" />
+	<property name="jar.dir"  value="jar" />
+	<property name="res.dir"  value="res" />
+	<property name="project"  value="dbconnector" />
+
+	<target name="clean">
+		<delete includeEmptyDirs="true" quiet="true" 
+			failonerror="false">
+			<fileset dir="${bin.dir}" />
+			<fileset dir="${jar.dir}" />			
+		</delete>
+	</target>
+		
+	<target name="init" depends="clean">
+		<mkdir dir="${bin.dir}" />
+		<mkdir dir="${jar.dir}" />
+	</target>
+	
+	<target name="compile" depends="init">
+		<javac srcdir="${src.dir}" destdir="${bin.dir}">		
+			<classpath>
+				<pathelement location="${res.dir}/MySQL Connector.jar"/>
+				<pathelement location="${res.dir}/OracleJDBC.jar"/>
+				<pathelement location="${res.dir}/PostgreSQLJDBC3.jar"/>
+				<pathelement location="${res.dir}/jdom.jar"/>
+			</classpath>
+		</javac>			
+	</target>
+
+	<target name="jar" depends="compile">
+		<unjar src="${res.dir}/MySQL Connector.jar" 
+			dest="${bin.dir}" overwrite="true" />
+		<unjar src="${res.dir}/OracleJDBC.jar" 
+			dest="${bin.dir}" overwrite="true" />
+		<unjar src="${res.dir}/PostgreSQLJDBC3.jar" 
+			dest="${bin.dir}" overwrite="true" />				
+		<unjar src="${res.dir}/jdom.jar" 
+			dest="${bin.dir}" overwrite="true" />			
+		<delete dir="${bin.dir}/META-INF" failonerror="no" />
+		<delete file="${bin.dir}/version.txt" failonerror="no" />
+		<jar destfile="${jar.dir}/${project}.jar"
+			basedir="${bin.dir}"
+			includes="**/*.*">
+			<manifest>
+				<attribute name="Main-Class" value="dbmeta.DBMetaMain"/>
+			</manifest>			
+		</jar>
+		<delete failonerror="no" includeEmptyDirs="true">
+			<fileset dir="${bin.dir}">
+				<exclude name="dbmeta/**/*.*" />
+			</fileset>			
+		</delete>	
+	</target>
+	
+	<available filepath="${jar.dir}" file="${project}.jar" 
+		property="jar.exist" />
+	
+	<target name="run.jar">
+		<java jar="${jar.dir}/DBConnector.jar" fork="true" />
+	</target>
+	
+	<target name="run">
+		<java classname="${project}.dbmeta.DBMetaMain">
+			<classpath>
+				<pathelement location="${res.dir}/MySQL Connector.jar"/>
+				<pathelement location="${res.dir}/OracleJDBC.jar"/>
+				<pathelement location="${res.dir}/PostgreSQLJDBC3.jar"/>					
+				<pathelement location="${res.dir}/jdom.jar"/>									
+		        <pathelement path="${bin.dir}"/>
+			</classpath>
+		</java>
+	</target>
+</project>	
